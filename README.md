@@ -1,0 +1,2 @@
+# FlxPDPlayer
+HaxeFlixelでParticle Designerのplistを再生する
