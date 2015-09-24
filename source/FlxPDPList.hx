@@ -90,13 +90,18 @@ class FlxPDPList {
     var dict = root.firstElement();
     var key = "";
     var tbl = new Map<String,String>();
+
     for(item in dict.elements()) {
 
+      var child = item.firstChild();
+      if(child == null) {
+        continue;
+      }
       if(item.nodeName == "key") {
-        key = item.firstChild().nodeValue;
+        key = child.nodeValue;
       }
       else {
-        var value:String = item.firstChild().nodeValue;
+        var value:String = child.nodeValue;
         tbl[key] = value;
       }
     }

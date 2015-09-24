@@ -3,7 +3,7 @@ package ;
 import flixel.util.FlxTimer;
 import flixel.util.FlxAngle;
 import flixel.FlxG;
-import openfl._legacy.display.BlendMode;
+import flash.display.BlendMode;
 import flixel.FlxState;
 import flixel.FlxObject;
 
