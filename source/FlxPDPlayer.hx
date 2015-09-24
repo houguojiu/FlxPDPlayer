@@ -1,5 +1,6 @@
 package ;
 
+import flixel.util.FlxTimer;
 import flixel.util.FlxAngle;
 import flixel.FlxG;
 import openfl._legacy.display.BlendMode;
@@ -22,16 +23,17 @@ class FlxPDPlayer extends FlxObject {
 
   /**
    * コンストラクタ
-   * @param state 現在実行しているFlxState
-   * @param X     中心座標(X)
-   * @param Y     中心座標(Y)
-   * @param plist plist
+   * @param state  現在実行しているFlxState
+   * @param X          中心座標(X)
+   * @param Y          中心座標(Y)
+   * @param plistpath  plistファイルのパス
+   * @parma texdir     テクスチャが存在するフォルダ
    **/
-  public function new(state:FlxState, X:Float, Y:Float, plist:FlxPDPList):Void {
+  public function new(state:FlxState, X:Float, Y:Float, plistpath:String, texdir:String):Void {
     super(X, Y);
 
     _emitter = new FlxPDEmitter();
-    _plist = plist;
+    _plist = new FlxPDPList(plistpath);
     // 座標設定
     _updateEmitterPosition();
 
@@ -39,7 +41,7 @@ class FlxPDPlayer extends FlxObject {
     _emitter.emitterType = _plist.emitterType;
 
     // パーティクル生成
-    var image = 'assets/images/${_plist.textureFileName}';
+    var image = '${texdir}/${_plist.textureFileName}';
     _emitter.makeParticles(image, _plist.maxParticles);
 
     // 出現エリアの設定
@@ -163,6 +165,13 @@ class FlxPDPlayer extends FlxObject {
   public function start(Explode:Bool = true, Frequency:Float = 0.1, Quantity:Int = 0):Void {
     var life_min = _plist.particleLifespan - _plist.particleLifespanVariance;
     var life_max = _plist.particleLifespan + _plist.particleLifespanVariance;
+
+    if(_plist.duration >= 0) {
+      new FlxTimer(_plist.duration, function(timer:FlxTimer) {
+        // 自動停止
+        _emitter.stop();
+      });
+    }
     _emitter.start(Explode, life_min, Frequency, Quantity, life_max);
   }
 }

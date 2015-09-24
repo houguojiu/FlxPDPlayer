@@ -229,4 +229,9 @@ class FlxPDEmitter extends FlxTypedEmitterExt<FlxPDParticle> {
 
     particle.onEmit();
   }
+
+  public function stop():Void {
+    _explode = true;
+    _quantity = 1;
+  }
 }
