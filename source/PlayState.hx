@@ -88,8 +88,7 @@ class PlayState extends FlxState {
       var py = FlxG.height/2;
       var freq = 1/1200;
       // 生成
-      // TODO: 処理落ちがひどいので無効化
-      //_create(px, py, "particle_texture6.plist", freq);
+      _create(px, py, "particle_texture6.plist", freq);
     }));
     btnY += btnDY;
 
