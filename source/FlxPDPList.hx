@@ -3,15 +3,22 @@ package ;
 import flixel.FlxG;
 import openfl.Assets;
 
+/**
+ * Particle Designerの plist 読み込みモジュール
+ **/
 class FlxPDPList {
+
+  // ■エミッタの種別
+  public static inline var TYPE_GRAVITY:Int = 0; // 重力
+  public static inline var TYPE_RADIAL:Int  = 1; // 円運動
 
   // ■Emitter Parameters.
   public var angle:Float              = 0; // 発射角度
   public var angleVariance:Float      = 0; // 発射角度の乱数
   public var blendFuncDestination:Int = 0; // ブレンドモード(DST)
   public var blendFuncSource:Int      = 0; // ブレンドモード(SRC)
-  public var duration:Float          = -1; // エミッタの生存時間 (-1で無限)
-  public var emitterType:Int          = 0; // エミッタの種類(0:Emitter 1:OneShot)
+  public var duration:Float           = -1; // エミッタの生存時間 (-1で無限)
+  public var emitterType:Int          = 0; // エミッタの種類(0:Gravity 1:Radial)
   public var finishColorAlpha:Float   = 0; // 終了時のアルファ値
   public var finishColorBlue:Float    = 0; // 終了時のB成分
   public var finishColorGreen:Float   = 0; // 終了時のG成分
@@ -105,22 +112,22 @@ class FlxPDPList {
       // ■Emitter Parameters.
       case "angle":                      angle                      = Std.parseFloat(v); // 発射角度
       case "angleVariance":              angleVariance              = Std.parseFloat(v); // 発射角度の乱数
-      case "blendFuncDestination":       blendFuncDestination       = Std.parseInt(v);   // ブレンドモード(DST)
-      case "blendFuncSource":            blendFuncSource            = Std.parseInt(v);   // ブレンドモード(SRC)
+      case "blendFuncDestination":       blendFuncDestination       = Std.parseInt(v);   // ブレンドモード (DST)
+      case "blendFuncSource":            blendFuncSource            = Std.parseInt(v);   // ブレンドモード (SRC)
       case "duration":                   duration                   = Std.parseFloat(v); // エミッタの生存時間 (-1で無限)
-      case "emitterType":                emitterType                = Std.parseInt(v);   // エミッタの種類(": Std.parseEmitter 1": Std.parseOneShot)
+      case "emitterType":                emitterType                = Std.parseInt(v);   // エミッタの種類 (0:Gravity 1:Radial)
       case "finishColorAlpha":           finishColorAlpha           = Std.parseFloat(v); // 終了時のアルファ値
       case "finishColorBlue":            finishColorBlue            = Std.parseFloat(v); // 終了時のB成分
       case "finishColorGreen":           finishColorGreen           = Std.parseFloat(v); // 終了時のG成分
       case "finishColorRed":             finishColorRed             = Std.parseFloat(v); // 終了時のR成分
-      case "finishColorVarianceAlpha":   finishColorVarianceAlpha   = Std.parseFloat(v); // 終了時のアルファ値(乱数)
-      case "finishColorVarianceBlue":    finishColorVarianceBlue    = Std.parseFloat(v); // 終了時のB成分(乱数)
-      case "finishColorVarianceGreen":   finishColorGreen           = Std.parseFloat(v); // 終了時のG成分(乱数)
-      case "finishColorVarianceRed":     finishColorRed             = Std.parseFloat(v); // 終了時のR成分(乱数)
+      case "finishColorVarianceAlpha":   finishColorVarianceAlpha   = Std.parseFloat(v); // 終了時のアルファ値 (乱数)
+      case "finishColorVarianceBlue":    finishColorVarianceBlue    = Std.parseFloat(v); // 終了時のB成分 (乱数)
+      case "finishColorVarianceGreen":   finishColorGreen           = Std.parseFloat(v); // 終了時のG成分 (乱数)
+      case "finishColorVarianceRed":     finishColorRed             = Std.parseFloat(v); // 終了時のR成分 (乱数)
       case "finishParticleSize":         finishParticleSize         = Std.parseFloat(v); // 終了時のパーティクルのサイズ
-      case "finishParticleSizeVariance": finishParticleSizeVariance = Std.parseFloat(v); // 終了時のパーティクルのサイズ(乱数)
-      case "gravityx":                   gravityx                   = Std.parseFloat(v); // 重力(X)
-      case "gravityy":                   gravityy                   = Std.parseFloat(v); // 重力(Y)
+      case "finishParticleSizeVariance": finishParticleSizeVariance = Std.parseFloat(v); // 終了時のパーティクルのサイズ (乱数)
+      case "gravityx":                   gravityx                   = Std.parseFloat(v); // 重力 (X)
+      case "gravityy":                   gravityy                   = Std.parseFloat(v); // 重力 (Y)
       case "maxParticles":               maxParticles               = Std.parseInt(v);   // パーティクルの最大数
       case "maxRadius":                  maxRadius                  = Std.parseFloat(v); // ???
       case "maxRadiusVariance":          maxRadiusVariance          = Std.parseFloat(v); // ???
@@ -128,31 +135,31 @@ class FlxPDPList {
 
         // ■Particle
       case "particleLifespan":          particleLifespan         = Std.parseFloat(v); // パーティクルの生存時間
-      case "particleLifespanVariance":  particleLifespanVariance = Std.parseFloat(v); // パーティクルの生存時間(乱数)
+      case "particleLifespanVariance":  particleLifespanVariance = Std.parseFloat(v); // パーティクルの生存時間 (乱数)
       case "radialAccelVariance":       radialAccelVariance      = Std.parseFloat(v); // ???
       case "radialAcceleration":        radialAcceleration       = Std.parseFloat(v); // ???
       case "rotatePerSecond":           rotatePerSecond          = Std.parseFloat(v); // ???
       case "rotatePerSecondVariance":   rotatePerSecondVariance  = Std.parseFloat(v); // ???
-      case "rotationEnd":               rotationEnd              = Std.parseFloat(v); // ???
-      case "rotationEndVariance":       rotationEndVariance      = Std.parseFloat(v); // ???
-      case "rotationStart":             rotationStart            = Std.parseFloat(v); // ???
-      case "rotationStartVariance":     rotationStartVariance    = Std.parseFloat(v); // ???
+      case "rotationEnd":               rotationEnd              = Std.parseFloat(v); // 終了角度
+      case "rotationEndVariance":       rotationEndVariance      = Std.parseFloat(v); // 終了角度 (乱数)
+      case "rotationStart":             rotationStart            = Std.parseFloat(v); // 開始角度
+      case "rotationStartVariance":     rotationStartVariance    = Std.parseFloat(v); // 開始角度 (乱数)
       case "sourcePositionVariancex":   sourcePositionVariancex  = Std.parseFloat(v); // パーティクル出現の幅
       case "sourcePositionVariancey":   sourcePositionVariancey  = Std.parseFloat(v); // パーティクル出現の高さ
-      case "sourcePositionx":           sourcePositionx          = Std.parseFloat(v); // パーティクル出現座標(X)
-      case "sourcePositiony":           sourcePositiony          = Std.parseFloat(v); // パーティクル出現座標(Y)
+      case "sourcePositionx":           sourcePositionx          = Std.parseFloat(v); // パーティクル出現座標 (X)
+      case "sourcePositiony":           sourcePositiony          = Std.parseFloat(v); // パーティクル出現座標 (Y)
       case "speed":                     speed                    = Std.parseFloat(v); // パーティクル初速度
       case "speedVariance":             speedVariance            = Std.parseFloat(v); // パーティクル初速度(乱数)
       case "startColorAlpha":           startColorAlpha          = Std.parseFloat(v); // 開始時のアルファ値
       case "startColorBlue":            startColorBlue           = Std.parseFloat(v); // 開始時のB成分
       case "startColorGreen":           startColorGreen          = Std.parseFloat(v); // 開始時のR成分
       case "startColorRed":             startColorRed            = Std.parseFloat(v); // 開始時のG成分
-      case "startColorVarianceAlpha":   startColorVarianceAlpha  = Std.parseFloat(v); // 開始時のアルファ値(乱数)
-      case "startColorVarianceBlue":    startColorVarianceBlue   = Std.parseFloat(v); // 開始時のB成分(乱数)
-      case "startColorVarianceGreen":   startColorVarianceGreen  = Std.parseFloat(v); // 開始時のR成分(乱数)
-      case "startColorVarianceRed":     startColorVarianceRed    = Std.parseFloat(v); // 開始時のG成分(乱数)
+      case "startColorVarianceAlpha":   startColorVarianceAlpha  = Std.parseFloat(v); // 開始時のアルファ値 (乱数)
+      case "startColorVarianceBlue":    startColorVarianceBlue   = Std.parseFloat(v); // 開始時のB成分 (乱数)
+      case "startColorVarianceGreen":   startColorVarianceGreen  = Std.parseFloat(v); // 開始時のR成分 (乱数)
+      case "startColorVarianceRed":     startColorVarianceRed    = Std.parseFloat(v); // 開始時のG成分 (乱数)
       case "startParticleSize":         startParticleSize        = Std.parseFloat(v); // 開始時のパーティクルのサイズ
-      case "startParticleSizeVariance": startParticleSizeVariance= Std.parseFloat(v); // 開始時のパーティクルのサイズ(乱数)
+      case "startParticleSizeVariance": startParticleSizeVariance= Std.parseFloat(v); // 開始時のパーティクルのサイズ (乱数)
       case "tangentialAccelVariance":   tangentialAccelVariance  = Std.parseFloat(v); // ???
       case "tangentialAcceleration":    tangentialAcceleration   = Std.parseFloat(v); // ???
       case "textureFileName":           textureFileName          = v; // テクスチャファイル名

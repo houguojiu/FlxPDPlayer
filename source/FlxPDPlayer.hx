@@ -35,6 +35,9 @@ class FlxPDPlayer extends FlxObject {
     // 座標設定
     _updateEmitterPosition();
 
+    // エミッタの種類
+    _emitter.emitterType = _plist.emitterType;
+
     // パーティクル生成
     var image = 'assets/images/${_plist.textureFileName}';
     _emitter.makeParticles(image, _plist.maxParticles);
@@ -73,6 +76,15 @@ class FlxPDPlayer extends FlxObject {
     _emitter.rotation.min *= -1;
     _emitter.rotation.max *= -1;
 
+    // Radial
+    // 開始点
+    _emitter.maxRadius               = _plist.maxRadius;
+    _emitter.maxRadiusVariance       = _plist.maxRadiusVariance;
+    // 終点
+    _emitter.minRadius               = _plist.minRadius;
+    // Radialの回転角度
+    _emitter.rotatePerSecond         = _plist.rotatePerSecond;
+    _emitter.rotatePerSecondVariance = _plist.rotatePerSecondVariance;
 
     // Size
     // 初期サイズ
@@ -135,6 +147,8 @@ class FlxPDPlayer extends FlxObject {
   private function _updateEmitterPosition():Void {
     _emitter.x = x - _plist.sourcePositionVariancex;
     _emitter.y = y - _plist.sourcePositionVariancey;
+    _emitter.xcenter = x;
+    _emitter.ycenter = y;
   }
 
   /**

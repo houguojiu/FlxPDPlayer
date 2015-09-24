@@ -1,12 +1,32 @@
 package ;
 import flixel.util.FlxRandom;
 import flixel.effects.particles.FlxTypedEmitterExt;
+
+/**
+ * Particle Designer用のエミッタ
+ **/
 class FlxPDEmitter extends FlxTypedEmitterExt<FlxPDParticle> {
 
+  // 中心座標
+  public var xcenter:Float = 0;
+  public var ycenter:Float = 0;
+
+  // 回転パラメータ
   public var rotationStart:Float         = 0; // 開始回転角度
-  public var rotationStartVariance:Float = 0; // 開始回転角度(変数
+  public var rotationStartVariance:Float = 0; // 開始回転角度 (乱数)
   public var rotationEnd:Float           = 0; // 終了回転角度
-  public var rotationEndVariance:Float   = 0; // 終了回転角度(変数)
+  public var rotationEndVariance:Float   = 0; // 終了回転角度 (乱数)
+
+  // エミッタの種類
+  public var emitterType:Int = 0;
+
+  // Radial用パラメータ
+  public var maxRadius:Float               = 0; // 開始点の半径
+  public var maxRadiusVariance:Float       = 0; // 開始点の半径 (乱数)
+  public var minRadius:Float               = 0; // 終点の半径
+  public var mixRadiusVariance:Float       = 0; // 終点の半径 (乱数)
+  public var rotatePerSecond:Float         = 0; // 1秒あたりの進む角度
+  public var rotatePerSecondVariance:Float = 0; // 1秒あたりの進む角度 (乱数)
 
   /**
 	 * Creates a new FlxEmitterExt object at a specific position.
@@ -19,12 +39,18 @@ class FlxPDEmitter extends FlxTypedEmitterExt<FlxPDParticle> {
   public function new(X:Float = 0, Y:Float = 0, Size:Int = 0)
   {
     super(X, Y, Size);
+
+    // FlxPDParticleを使う
+    _particleClass = FlxPDParticle;
   }
 
   override public function emitParticle():Void
   {
     var particle:FlxPDParticle = cast recycle(cast _particleClass);
     particle.elasticity = bounce;
+
+    // エミッタの種類を設定
+    particle.emitterType = emitterType;
 
     particle.reset(x - (Std.int(particle.width) >> 1) + FlxRandom.float() * width, y - (Std.int(particle.height) >> 1) + FlxRandom.float() * height);
     particle.visible = true;
@@ -170,6 +196,37 @@ class FlxPDEmitter extends FlxTypedEmitterExt<FlxPDParticle> {
     particle.angularVelocity = (rotEnd - rotStart) / particle.lifespan;
 
     particle.drag.set(particleDrag.x, particleDrag.y);
+
+
+    // Radial用パラメータ
+    if(emitterType == FlxPDPList.TYPE_RADIAL) {
+      // Radial
+      particle.emitterType = emitterType;
+
+      // 基準座標
+      particle.xemitter = xcenter;
+      particle.yemitter = ycenter;
+
+      // 半径
+      // 開始半径を決める
+      var vStart = maxRadiusVariance;
+      particle.startRadius = minRadius;
+      var max = maxRadius + FlxRandom.floatRanged(-vStart, vStart);
+      var d = (max - minRadius);
+      // 移動範囲を決定
+      particle.rangeRadius = d;
+
+      // 回転
+      particle.startRotate = FlxRandom.floatRanged(-179, 180);
+      var vRotate = rotatePerSecondVariance;
+      var speed = rotatePerSecond + FlxRandom.floatRanged(-vRotate, vRotate);
+      particle.rangeRotate = speed * lifespan;
+
+      // 移動を無効化
+      particle.acceleration.set();
+      particle.velocity.set();
+    }
+
     particle.onEmit();
   }
 }

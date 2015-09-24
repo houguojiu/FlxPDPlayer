@@ -24,12 +24,13 @@ class PlayState extends FlxState {
     super.create();
 
 //    _plist = new FlxPDPList("assets/data/particle_texture.plist");
-//    _plist = new FlxPDPList("assets/data/particle_texture2.plist");
-    _plist = new FlxPDPList("assets/data/particle_texture3.plist");
+    _plist = new FlxPDPList("assets/data/particle_texture2.plist");
+//    _plist = new FlxPDPList("assets/data/particle_texture3.plist");
+//    _plist = new FlxPDPList("assets/data/particle_texture4.plist");
 
     var px = FlxG.width/2;
     var py = FlxG.height/2;
-    py = FlxG.height;
+//    py = FlxG.height;
     _player = new FlxPDPlayer(this, px, py, _plist);
     this.add(_player);
 
@@ -68,7 +69,7 @@ class PlayState extends FlxState {
     var life_max = _plist.particleLifespan + _plist.particleLifespanVariance;
     txt.text = 'Lifetime: ${life_min} +- ${life_max}';
     var frequency:Float = 1;
-//    frequency /= 600;
+    frequency /= 600;
     _player.start(false, frequency, 0);
   }
 
