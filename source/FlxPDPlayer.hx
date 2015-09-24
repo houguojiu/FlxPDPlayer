@@ -4,7 +4,6 @@ import flixel.util.FlxAngle;
 import flixel.FlxG;
 import openfl._legacy.display.BlendMode;
 import flixel.FlxState;
-import flixel.effects.particles.FlxEmitterExt;
 import flixel.FlxObject;
 
 /**
@@ -13,9 +12,9 @@ import flixel.FlxObject;
 class FlxPDPlayer extends FlxObject {
 
   // エミッタ
-  var _emitter:FlxEmitterExt;
-  public var emitter(get, never):FlxEmitterExt;
-  private function get_emitter():FlxEmitterExt {
+  var _emitter:FlxPDEmitter;
+  public var emitter(get, never):FlxPDEmitter;
+  private function get_emitter():FlxPDEmitter {
     return _emitter;
   }
   // plist
@@ -31,7 +30,7 @@ class FlxPDPlayer extends FlxObject {
   public function new(state:FlxState, X:Float, Y:Float, plist:FlxPDPList):Void {
     super(X, Y);
 
-    _emitter = new FlxEmitterExt();
+    _emitter = new FlxPDEmitter();
     _plist = plist;
     // 座標設定
     _updateEmitterPosition();
@@ -63,8 +62,13 @@ class FlxPDPlayer extends FlxObject {
     _emitter.acceleration.set(_plist.gravityx, -_plist.gravityy);
 
     // 回転
-    _emitter.minRotation = _plist.rotationStart - _plist.rotationStartVariance;
-    _emitter.maxRotation = _plist.rotationStart + _plist.rotationStartVariance;
+    _emitter.rotationStart         = _plist.rotationStart;
+    _emitter.rotationStartVariance = _plist.rotationStartVariance;
+    _emitter.rotationEnd           = _plist.rotationEnd;
+    _emitter.rotationEndVariance   = _plist.rotationEndVariance;
+    // 生存時間で調整
+    _emitter.minRotation /= _emitter.life.min;
+    _emitter.maxRotation /= _emitter.life.max;
     // 上下反転
     _emitter.rotation.min *= -1;
     _emitter.rotation.max *= -1;
